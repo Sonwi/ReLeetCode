@@ -309,7 +309,50 @@ struct ListSolution {
 };
 
 struct HashSolution {
+    // 242 有效的字母异位分词
+    bool isAnagram(string s, string t) {
+        if(s.size() != t.size()) return false;
+        vector<int> arraySet(26, 0);
+        for(char c : s) {
+            arraySet[c - 'a'] ++;
+        }
 
+        for(char c : t) {
+            if(--arraySet[c - 'a'] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 349 两个数组的交集
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> arraySet(1001, 0);
+        vector<int> res;
+        for(int num : nums1) {
+            arraySet[num]++;
+        }
+
+        for(int num : nums2) {
+            if(arraySet[num] > 0) {
+                arraySet[num] = -1;
+                res.push_back(num);
+            }
+        }
+
+        return res;
+    }
+
+    // 202 快乐数
+    bool isHappy(int n) {
+        if(n < 10) return n == 1 || n == 7;
+        int sum = 0;
+        while(n) {
+            sum += (n%10) * (n%10);
+            n = n/10;
+        }
+        return isHappy(sum);
+    }
 };
 
 struct BinaryTreeSolution {
@@ -341,6 +384,94 @@ struct BinaryTreeSolution {
         return 1 + max(maxDepth(root->left), maxDepth(root->right));
     }
 
+    // 二叉搜索树最近公共祖先
+    // 充分利用二叉搜索树的特性
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode *q) {
+        if(p->val > q->val) swap(p, q);
+        TreeNode *cur = root;
+        while(cur) {
+            if(cur->val >= p->val && cur->val <= q->val) {
+                return cur;
+            } else if(cur->val < p->val) {
+                cur = cur->right;
+            } else {
+                cur = cur->left;
+            }
+        }
+        return cur;
+    }
+};
+
+struct DynamicProgramming {
+    // 爬楼梯
+    int climbStairs(int n) {
+        if(n == 0 || n == 1) return 1;
+        int dp[2];
+        dp[0] = 1, dp[1] = 1;
+        int res = 0;
+        for(int i = 2; i <= n; ++i) {
+            res = dp[0] + dp[1];
+            dp[0] = dp[1];
+            dp[1] = res;
+        }
+        return res;
+    }
+    // 最小花费爬楼梯
+    int minCostClimbingStairs(vector<int>& cost) {
+        if(cost.size() <= 1) {
+            return 0;
+        }
+        vector<int> price(2, 0);
+        for(int i = 2; i <= cost.size(); ++i) {
+            int tmp = min(price[1] + cost[i-1], price[0] + cost[i-2]);
+            price[0] = price[1];
+            price[1] = tmp;
+        }
+        return price.back();
+    }
+
+    //62 不同路径
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> board(m, vector<int>(n, 0));
+        // 边缘节点路径初始化
+        for(int i = 0; i < n; ++i) {
+            board[0][i] = 1;
+        }
+        for(int i = 0; i < m; ++i) {
+            board[i][0] = 1;
+        }
+        for(int i = 1; i < m; ++i) {
+            for(int j = 1; j < n; ++j ) {
+                board[i][j] = board[i-1][j] + board[i][j-1];
+            }
+        }
+        return board.back().back();
+    }
+
+    //63 带有障碍物的不同路径
+    int uniquePathsWithObstacles(vector<vector<int>> obstacleGrid) {
+        int m = obstacleGrid.size();
+        if(m == 0) return 0;
+        int n = obstacleGrid[0].size();
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        // 初始化边界
+        for(int i = 0; i < n; ++i) {
+            if(obstacleGrid[0][i] == 1) break;
+            dp[0][i] = 1;
+        }
+        for(int i = 0; i < m; ++i) {
+            if(obstacleGrid[i][0] == 1) break;
+            dp[i][0] = 1;
+        }
+        for(int i = 1; i < m; ++i) {
+            for(int j = 1; j < n; ++j) {
+                dp[i][j] = (obstacleGrid[i-1][j] == 1 ? 0 : dp[i-1][j]) + (obstacleGrid[i][j-1] == 1? 0 : dp[i][j-1]);
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    // 343 整数拆分
 };
 
 //707 设计链表

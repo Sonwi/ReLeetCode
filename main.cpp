@@ -29,7 +29,7 @@ int main() {
 //    s2.testRemoveNthFromEnd();
 
     // for interview
-    Interview item;
+//    Interview item;
 
     // 二叉树篇
 //    BinaryTreeSolution *s3;
@@ -38,6 +38,15 @@ int main() {
 //    cout << "-----------" << endl;
 //    cout << s3->isSymmetric(tree) << endl;
 
+    // hash表篇
+    HashSolution h;
+//    cout << h.isAnagram("awert", "werta") << endl;
+
+    // DP
+    DynamicProgramming dp;
+//    vector<int> nums{10, 15, 20};
+//    dp.minCostClimbingStairs(nums);
+    dp.uniquePathsWithObstacles({{0,0,0},{0,1,0},{0,0,0}});
     //test entry end
     return 0;
 }
