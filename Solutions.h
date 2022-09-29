@@ -472,6 +472,60 @@ struct DynamicProgramming {
     }
 
     // 343 整数拆分
+    int integerBreak(int n) {
+        vector<int>nums(n + 1, 0);
+        nums[1] = 1, nums[2] = 1;
+        for(int i = 3; i < n + 1; ++i) {
+            int maxMulti = 0;
+            for(int j = 1; j < i; ++j){
+                maxMulti = max(maxMulti, max((i - j) * j, (i - j) * nums[j]));
+            }
+            nums[i] = maxMulti;
+        }
+        return nums[n];
+    }
+    void testIntegerBreak() {
+        integerBreak(10);
+    }
+
+
+    // 96 不同的二叉搜索树
+    int numTrees(int n) {
+        vector<int> nums(n + 1, 0);
+        nums[0] = 1;
+        nums[1] = 1;
+        for (int i = 2; i < n + 1; ++i) {
+            int numOfTree = 0;
+            for (int j = 1; j <= i; ++j) {
+                numOfTree += nums[j - 1] * nums[i - j];
+            }
+            nums[i] = numOfTree;
+        }
+        return nums[n];
+    }
+
+        // 美团笔试题: 只有 1 和 -1 数组，求积为1的序列个数
+    int numOfSeqs(vector<int> nums) {
+        vector<vector<int>> dp(2, vector<int>(nums.size(), 0));
+        dp[0][0] = nums[0] == 1 ? 1 : 0;
+        dp[0][1] = nums[0] == -1 ? 1 : 0;
+        int ret = dp[0][0];
+        for(int i = 1; i < nums.size(); ++i) {
+            if(nums[i] == 1) {
+                dp[0][i] = dp[0][i - 1] + 1;
+                dp[1][i] = dp[1][i-1];
+            }else {
+                dp[0][i] = dp[1][i-1];
+                dp[1][i] = dp[0][i-1] + 1;
+            }
+            ret += dp[0][i];
+        }
+        return ret;
+    }
+
+    void testNumOfSeqs() {
+        cout << numOfSeqs({1,1,-1,-1});
+    }
 };
 
 //707 设计链表
