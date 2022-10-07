@@ -528,6 +528,67 @@ struct DynamicProgramming {
     }
 };
 
+struct BigData {
+    // 大数相乘
+    //1. num1[i] * num2[j] 贡献给特定位置 i + j + 1 (进位在 i+j)
+    //2. 相乘 最多 num1.size() + num2.size() 位数
+    string multiply(string num1, string num2) {
+        vector<int> res(num1.size() + num2.size());
+
+        for(int i = 0; i < num1.size(); ++i) {
+            for(int j = 0; j < num2.size(); ++j) {
+                res[i + j + 1] += (num1[i] - '0') * (num2[j] - '0');
+            }
+        }
+
+        for(int i = res.size() - 1; i >= 1; --i) {
+            res[i-1] += res[i]/10;
+            res[i] = res[i] % 10;
+        }
+
+        int idx = res[0] == 0? 1 : 0;
+        string resStr; resStr.reserve(res.size());
+        for(; idx < res.size(); ++idx) {
+            resStr.push_back(res[idx] + '0');
+        }
+        return resStr;
+    }
+
+    void testMultipy() {
+        cout << 99 * 98 << endl;
+        cout << multiply("99", "98");
+    }
+
+    // 大数相加
+    string add(string s, string t) {
+        if(s.size() < t.size())
+            swap(s,t);
+        string ret;
+        ret.reserve(s.size() + 1);
+
+        int sum = 0;
+        int up = 0;
+        int i = s.size() - 1, j = t.size() - 1;
+
+        while(i >= 0 || j >= 0 || up != 0) {
+            int a = i >= 0? s[i] - '0' : 0;
+            int b = j >= 0? t[j] - '0' : 0;
+            sum  = a + b + up;
+            up  = sum / 10;
+            sum = sum % 10;
+            ret.push_back(sum + '0');
+            --i;--j;
+        }
+        reverse(ret.begin(), ret.end());
+        return ret;
+    }
+
+    void testAdd() {
+        cout << 99 + 108 << endl;
+        cout << add("99", "108");
+    }
+};
+
 //707 设计链表
 class MyLinkedList {
 public:

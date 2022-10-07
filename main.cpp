@@ -46,9 +46,13 @@ int main() {
     DynamicProgramming dp;
 //    vector<int> nums{10, 15, 20};
 //    dp.minCostClimbingStairs(nums);
-    dp.uniquePathsWithObstacles({{0,0,0},{0,1,0},{0,0,0}});
+//    dp.uniquePathsWithObstacles({{0,0,0},{0,1,0},{0,0,0}});
 //    dp.testIntegerBreak();
-    dp.testNumOfSeqs();
+//    dp.testNumOfSeqs();
+
+    BigData b;
+//    b.testAdd();
+    b.testMultipy();
     //test entry end
     return 0;
 }
