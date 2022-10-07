@@ -690,6 +690,11 @@ struct Sort {
             sink(nums, k, n);
         }
 
+        // 下沉 sink 是指这个节点打乱了原有的堆结构，从顶向下下沉时不能保证下沉时是堆结构
+//        for(int k = 0; k <= (n-2)/2; ++k) {
+//            sink(nums, k, n);
+//        }
+
         // 每次把堆最大元素移到末尾，减小堆大小
         while(n > 1) {
             swap(nums[0], nums[n-1]);
