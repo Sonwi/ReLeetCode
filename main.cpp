@@ -54,5 +54,6 @@ int main() {
 //    b.testAdd();
     b.testMultipy();
     //test entry end
+    // comment from manjaro
     return 0;
 }
