@@ -52,8 +52,10 @@ int main() {
 
     BigData b;
 //    b.testAdd();
-    b.testMultipy();
+//    b.testMultipy();
     //test entry end
     // comment from manjaro
+    Sort s;
+    s.testSort();
     return 0;
 }

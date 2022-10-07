@@ -10,24 +10,36 @@
 #include "DataStructs.h"
 using namespace std;
 
-template <typename T>
-void printVector(vector<T>& nums) {
-    cout << "[ ";
-    for(T num : nums) {
-        cout << num << " ";
+namespace alex{
+    template <typename T>
+    void printVector(vector<T> nums) {
+        cout << "[ ";
+        for(T num : nums) {
+            cout << num << " ";
+        }
+        cout <<"]\n";
     }
-    cout <<"]\n";
-}
 
-template<typename T>
-void printMatrix(vector<vector<T>> matrix) {
-   for(auto& item : matrix) {
-       printVector(item);
-   }
+    template<typename T>
+    void printMatrix(vector<vector<T>> matrix) {
+        for(auto& item : matrix) {
+            printVector(item);
+        }
+    }
+
+    vector<int> randNums(int size) {
+        vector<int> res; res.reserve(size);
+
+        srand(time(0));
+        for(int i = 0; i < size; ++i) {
+            res.push_back(rand() % 1000);
+        }
+        return res;
+    }
 }
 
 // 代码随想录 数组篇
-class ArraySolution {
+struct ArraySolution {
 public:
     //代码随想录 数组篇
     vector<int> sortedSquares(vector<int>& A) {
@@ -56,7 +68,7 @@ public:
     void testSortedSquares() {
         vector<int> nums {-10, 2, 5, 8, 9, 10};
         vector<int> res = this->sortedSquares(nums);
-        printVector(res);
+        alex::printVector(res);
     }
 
     int minSubArrayLen(int s, vector<int>& nums) {
@@ -146,7 +158,7 @@ public:
     }
 
     void testMatrix() {
-        printMatrix(generateMatrix(4));
+        alex::printMatrix(generateMatrix(4));
     }
 
 };
@@ -588,6 +600,121 @@ struct BigData {
         cout << add("99", "108");
     }
 };
+
+struct Sort {
+    void testSort() {
+        vector<int> nums {2,4,1,5,123,56,78,12,9,5};
+        alex::printVector(selectSort(alex::randNums(20)));
+        alex::printVector(insertSort(nums));
+        //mergeSort(nums, 0, nums.size()-1);
+//        quickSort(nums, 0, nums.size() -1);
+        heapSort(nums, nums.size());
+        alex::printVector(nums);
+    }
+    // 选择排序
+    // 缺点：n^2 比较复杂度
+    // 优点: 线性交换次数
+    vector<int> selectSort(vector<int> nums) {
+        for(int i = 0; i < nums.size(); ++i) {
+            int min = i;
+            for(int j = i; j < nums.size(); ++j) {
+                if(nums[j] < nums[min]) min = j;
+            }
+            swap(nums[i], nums[min]);
+        }
+        return nums;
+    }
+
+    // 选择排序 遍历**后面**的数选择最小的放入
+    // 插入排序 将拿到的数遍历**前面**插入
+    vector<int> insertSort(vector<int> nums) {
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = i; j > 0 && nums[j] < nums[j - 1]; --j) {
+                swap(nums[j], nums[j-1]);
+            }
+        }
+        return nums;
+    }
+
+    void quickSort(vector<int>& nums, int lo, int hi) {
+        if(lo >= hi) return;
+        int mid = partition(nums, lo, hi);
+        quickSort(nums, lo, mid - 1);
+        quickSort(nums, mid+1, hi);
+    }
+
+    int partition(vector<int>& nums, int lo, int hi) {
+        srand(time(0));
+        int randIdx = rand() %(hi - lo + 1) + lo;
+        swap(nums[lo], nums[randIdx]);
+
+        int item = nums[lo];
+        int i = lo, j = hi+1;
+        while(1) {
+            while(nums[++i] < item){
+                if(i >= hi) break;
+            }
+            while(nums[--j] > item){
+                if(j <= lo) break;
+            }
+            if(i >= j) break;
+            swap(nums[i], nums[j]);
+        }
+        swap(nums[lo], nums[j]);
+        return j;
+    }
+
+    void mergeSort(vector<int>& nums, int lo, int hi) {
+        if(lo >= hi) return;
+        int mid = lo + (hi-lo)/2;
+        mergeSort(nums, lo, mid);
+        mergeSort(nums, mid+1, hi);
+        merge(nums, lo, mid, hi);
+    }
+
+    void merge(vector<int>& nums, int lo, int mid, int hi) {
+        vector<int> aux(nums.begin()+lo, nums.begin()+hi + 1);
+        int i = 0, j = mid-lo + 1;
+        int idx = lo;
+        while(i <= mid - lo || j <= hi - lo) {
+            if (i > mid - lo) nums[idx++] = aux[j++];
+            else if (j > hi - lo) nums[idx++] = aux[i++];
+            else if (aux[i] < aux[j]) nums[idx++] = aux[i++];
+            else nums[idx++] = aux[j++];
+        }
+    }
+
+    void heapSort(vector<int>& nums, int n) {
+        // 从最后一个有子节点的开始下沉，构造堆
+        for(int k = (n-2)/2; k >=0; --k) {
+            sink(nums, k, n);
+        }
+
+        // 每次把堆最大元素移到末尾，减小堆大小
+        while(n > 1) {
+            swap(nums[0], nums[n-1]);
+            --n;
+            sink(nums, 0, n);
+        }
+    }
+
+    void sink(vector<int>& nums, int k, int n/*堆大小*/) {
+        while(2*k + 1 < n) {
+            int j = 2 * k + 1;
+            if(j < n -1  && nums[j] < nums[j+1]) ++j;
+            if(nums[k] >= nums[j]) break;
+            swap(nums[k], nums[j]);
+            k = j;
+        }
+    }
+};
+
+// 并查集
+struct UnionFind{
+
+};
+
+// 生产者消费者
 
 //707 设计链表
 class MyLinkedList {
