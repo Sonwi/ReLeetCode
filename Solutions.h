@@ -716,6 +716,42 @@ struct Sort {
 
 // 并查集
 struct UnionFind{
+    vector<int> id;
+    int count;
+    UnionFind(int n) : id(n), count(n) {
+        for(int i = 0; i < n; ++i) {
+            id[i] = i;
+        }
+    }
+    void union_item(int p, int q) {
+        int pRoot = find(p);
+        int qRoot = find(q);
+        if (pRoot != qRoot)
+        {
+            count--;
+            id[pRoot] = qRoot;
+        }
+    }
+
+    int find(int p) {
+        if(p == id[p]) return p;
+        return id[p] = find(id[p]);
+    }
+
+    bool connected(int p, int q) {
+        return find(p) == find(q);
+    }
+
+    void test() {
+        union_item(1,2);
+        union_item(2,3);
+        union_item(3,4);
+        union_item(4,5);
+        union_item(5,6);
+        union_item(6,7);
+        connected(1,7);
+        alex::printVector(id);
+    }
 
 };
 

@@ -56,6 +56,9 @@ int main() {
     //test entry end
     // comment from manjaro
     Sort s;
-    s.testSort();
+//    s.testSort();
+    UnionFind u(10);
+    alex::printVector(u.id);
+    u.test();
     return 0;
 }
