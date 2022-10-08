@@ -58,7 +58,10 @@ int main() {
     Sort s;
 //    s.testSort();
     UnionFind u(10);
-    alex::printVector(u.id);
-    u.test();
+//    alex::printVector(u.id);
+//    u.test();
+    CodeTop cd;
+    //cd.testlengthOfLongestSubstring();
+    cd.testSearch();
     return 0;
 }

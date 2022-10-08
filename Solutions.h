@@ -601,6 +601,145 @@ struct BigData {
     }
 };
 
+struct CodeTop {
+    // 3. 无重复字符的最长子串
+    int lengthOfLongestSubstring(string s) {
+        if(s.size() <= 1) return s.size();
+
+        unordered_map<char, int>myMap;
+        int res = 1;
+        int left = 0, right = 0;
+        for(; right < s.size(); ++right) {
+            if(myMap.count(s[right]) && myMap[s[right]] >= left) {
+                left = myMap[s[right]] + 1;
+            }
+
+            myMap[s[right]] = right;
+            res = max(res, right - left + 1);
+        }
+        return res;
+    }
+
+    void testlengthOfLongestSubstring() {
+        cout << lengthOfLongestSubstring("abba") << endl;
+    }
+
+    //O(n) 复杂度找到无序数组第k大的元素
+    int findKthLargest(vector<int>& nums, int k) {
+        buildHead(nums, nums.size());
+        for(int i =0 ; i < k; ++i) {
+            swap(nums[0], nums[nums.size()-1-i]);
+            sink(nums, 0, nums.size()-1-i);
+        }
+        return nums[nums.size()-k];
+    }
+
+    void buildHead(vector<int>& nums, int n) {
+        int k = (n-2)/2;
+        while(k >= 0) {
+            sink(nums, k, n);
+            --k;
+        }
+    }
+
+    void sink(vector<int>& nums, int k, int n) {
+        while(2*k + 1 < n) {
+            int j = 2*k+1;
+            if(j+1 < n && nums[j+1] > nums[j]) ++j;
+            if(nums[k] >= nums[j]) break;
+            swap(nums[k], nums[j]);
+            k = j;
+        }
+    }
+
+    // 33. 搜索旋转排序数组
+    int search(vector<int>& nums, int target) {
+        int left = 0, right = nums.size() - 1;
+        while(left <= right) {
+            int mid = (left + right)/2;
+            if(nums[mid] == target) return mid;
+            if(nums[mid] >= nums[0]) {
+                if(nums[mid] > target && target >= nums[0]) right = mid -1;
+                else left = mid + 1;
+            } else {
+                if(nums[mid] < target && target <= nums.back()) left = mid + 1;
+                else right = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    void testSearch() {
+        vector<int> nums{4,5,6,7,0,1,2};
+         cout << search(nums, 0) << endl;
+    }
+
+};
+
+// 146 LRU 缓存
+class LRUCache {
+private:
+    struct node {
+        int key;
+        int value;
+        node* pre;
+        node* next;
+        node(int key, int value): key(key), value(value), pre(nullptr), next(nullptr){}
+    };
+    int cap;
+    unordered_map<int, node*> myMap;
+    node* dummyHead;
+    node* dummyTail;
+public:
+    LRUCache(int capacity) {
+        dummyHead = new node(0, 0);
+        dummyTail = new node(0, 0);
+        dummyHead->next = dummyTail;
+        dummyTail->pre = dummyHead;
+        cap = capacity;
+    }
+
+    int get(int key) {
+        if(myMap.count(key)) {
+            removeToHead(myMap[key]);
+            return myMap[key]->value;
+        }
+        return -1;
+    }
+
+    void put(int key, int value) {
+        if(myMap.count(key)) {
+            myMap[key]->value = value;
+            removeToHead(myMap[key]);
+            return;
+        }
+        node* tmp = new node(key, value);
+        if(cap == 0) {
+            deleteNode(dummyTail->pre);
+            cap++;
+        }
+        cap--;
+        addToHead(tmp);
+    }
+
+    void deleteNode(node* n) {
+        n->pre->next = n->next;
+        n->next->pre = n->pre;
+        myMap.erase(n->key);
+    }
+    void addToHead(node* n) {
+        n->next = dummyHead->next;
+        dummyHead->next->pre = n;
+        n->pre = dummyHead;
+        dummyHead->next = n;
+        myMap[n->key] = n;
+    }
+    void removeToHead(node* n) {
+        deleteNode(n);
+        addToHead(n);
+    }
+};
+
 struct Sort {
     void testSort() {
         vector<int> nums {2,4,1,5,123,56,78,12,9,5};
