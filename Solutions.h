@@ -674,6 +674,76 @@ struct CodeTop {
          cout << search(nums, 0) << endl;
     }
 
+    //200 岛屿数量
+    int numIslands(vector<vector<char>>& grid) {
+        int n = grid.size();
+        if(n == 0) return 0;
+        int m = grid[0].size();
+        vector<vector<int>> visited(n, vector<int>(m, 0));
+        int res = 0;
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < m; ++j) {
+                if(visited[i][j] == 0 && grid[i][j] == '1') {
+                    ++res;
+                    depFirst(visited, grid, i, j);
+                }
+            }
+        }
+        return res;
+    }
+
+    void depFirst(vector<vector<int>>& visited, vector<vector<char>>& grid, int i, int j) {
+        if(grid[i][j] == '0') return;
+        visited[i][j] = 1;
+        if(i-1 >= 0)depFirst(visited, grid, i-1, j);
+        if(i+1 < visited.size())depFirst(visited, grid, i+1, j);
+        if(j-1 >= 0)depFirst(visited, grid, i, j-1);
+        if(j+1 < visited[0].size())depFirst(visited, grid, i, j+1);
+    }
+
+    //5 最长回文子串
+    string longestPalindrome(string s) {
+        vector<vector<int>> dp(s.size(), vector<int>(s.size()));
+        for(int i = 0 ; i < s.size(); ++i) {
+            dp[i][i] = 1;
+        }
+
+        int begin = 0, maxLen = 0;
+        for(int len = 2; len < s.size() + 1; ++len) {
+            for(int i = 0; i < len;++i) {
+                int right = i + len - 1;
+                if(right >= s.size()) break;
+                if(s[i] != s[right]) dp[i][right] = 0;
+                else {
+                    if(right - i < 3) {
+                        dp[i][right] = 1;
+                    } else {
+                        dp[i][right] = dp[i+1][right-1];
+                    }
+                }
+                if(dp[i][right] == 1 && right - i + 1 > maxLen) {
+                    maxLen = right - i + 1;
+                    begin = i;
+                }
+            }
+        }
+        return s.substr(begin, maxLen);
+    }
+
+    void testLong(){
+        longestPalindrome("cbbd");
+    }
+
+    // 236 二叉树的最近公共祖先
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == p || root == q || ! root) return root;
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+        if(left && right) return root;
+        else if(!left) return right;
+        else return left;
+    }
+
 };
 
 // 146 LRU 缓存

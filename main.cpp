@@ -62,6 +62,6 @@ int main() {
 //    u.test();
     CodeTop cd;
     //cd.testlengthOfLongestSubstring();
-    cd.testSearch();
+    cd.testLong();
     return 0;
 }
