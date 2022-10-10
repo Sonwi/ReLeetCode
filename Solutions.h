@@ -702,6 +702,7 @@ struct CodeTop {
     }
 
     //5 最长回文子串
+    // 注意使用 dp[i][j] 表示 i - j的子串
     string longestPalindrome(string s) {
         vector<vector<int>> dp(s.size(), vector<int>(s.size()));
         for(int i = 0 ; i < s.size(); ++i) {
