@@ -747,6 +747,118 @@ struct CodeTop {
 
 };
 
+struct NowCoder {
+    
+    // 翻转 m-n 之间的链表
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        // write code here
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        
+        ListNode *lo = head;
+        ListNode *pre = dummy;
+        for(int i = 0; i < m-1; ++i) {
+            lo = lo->next;
+            pre = pre->next;
+        }
+        
+        ListNode *seqPre = pre;
+        ListNode *next = lo->next;
+        for(int i = 0; i < n - m + 1; ++i) {
+            lo->next = pre;
+            pre = lo;
+            lo = next;
+            next = lo->next;
+        }
+        
+        seqPre->next->next = lo;
+        seqPre->next = pre;
+        return dummy->next;
+    }
+    
+    // k个一组翻转链表
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // write code here
+        int numOfNodes = 0;
+        ListNode* cur = head;
+        while(cur) {
+            ++numOfNodes;
+            cur = cur->next;
+        }
+        
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        
+        ListNode* seqPre = dummy;
+        ListNode* pre = dummy;
+        cur = head;
+        for(int i = 0; i < numOfNodes/k; ++i) { // 组数量
+            for(int j = 0; j < k; ++j) {
+                ListNode* next = cur->next;
+                cur->next = pre;
+                pre = cur;
+                cur = next;
+            }
+            seqPre->next->next = cur;
+            seqPre->next = pre;
+            seqPre = pre;
+        }
+        return dummy->next;
+    }
+    
+    void testReverseKGroup() {
+        ListNode* list = ListNode::makeList({1,2,3,4,5});
+        reverseKGroup(list, 2);
+    }
+    
+    // BM4 合并两个排序的链表
+    ListNode* Merge(ListNode* pHead1, ListNode* pHead2) {
+        ListNode* dummy = new ListNode(0);
+        ListNode* cur = dummy;
+        
+        ListNode* l1 = pHead1;
+        ListNode* l2 = pHead2;
+        
+        while(l1 || l2) {
+            if(!l1) {
+                cur->next = l2;
+                l2 = l2->next;
+            }else if(!l2) {
+                cur->next = l1;
+                l1 = l1->next;
+            }else if(l1->val <= l2->val) {
+                cur->next = l1;
+                l1 = l1->next;
+            }else {
+                cur->next = l2;
+                l2 = l2->next;
+            }
+            cur = cur->next;
+        }
+        return dummy->next;
+    }
+    
+    // BM5 合并k个已经排序的链表
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        return mergeLists(lists, 0, lists.size() - 1);
+    }
+    
+    ListNode *mergeLists(vector<ListNode *> &lists, int sIdx, int eIdx) {
+        if(sIdx >= eIdx) return nullptr;
+        
+        int mid = (sIdx + eIdx)/2;
+        
+        ListNode* left = mergeLists(lists, sIdx, mid);
+        ListNode* right = mergeLists(lists, mid+1, eIdx);
+        
+        if(!left)return right;
+        else if(!right) return left;
+        else {
+            return Merge(left, right);
+        }
+    }
+};
+
 // 146 LRU 缓存
 class LRUCache {
 private:
