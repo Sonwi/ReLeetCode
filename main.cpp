@@ -63,5 +63,8 @@ int main() {
     CodeTop cd;
     //cd.testlengthOfLongestSubstring();
     cd.testLong();
+    cout << "out put from lsw-mba xcode" << endl;
+    NowCoder nc;
+    nc.testReverseKGroup();
     return 0;
 }
